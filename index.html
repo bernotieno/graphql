@@ -23,15 +23,20 @@
         <div id="profileContainer" class="hidden">
             <header class="profile-header">
                 <div class="user-info">
+                    <div id="userHeaderClickable" class="user-info" style="cursor: pointer;">
                     <div id="userAvatar"></div>
                     <div>
                         <h1 id="userName"></h1>
                         <p id="userId"></p>
                     </div>
+                    </div>
                 </div>
                 <button id="logoutBtn" class="btn">Logout</button>
             </header>
-
+            <div id="personalInfoCard" class="card hidden">
+                <h3>Personal Information</h3>
+                <ul id="personalInfo" class="info-list"></ul>
+              </div>
             <div class="stats-grid">
                 <div class="card">
                     <h3>Skills</h3>
@@ -48,7 +53,6 @@
                     <div id="audits"></div>
                 </div>
             </div>
-
             <div class="card">
                 <h3>Statistics</h3>
                 <div class="stats-tabs">
