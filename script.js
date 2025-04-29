@@ -184,8 +184,9 @@ function displayUserProfile(data) {
     }
 
     const user = data.user[0];
-    
-    // User Info
+    const attrs = user.attrs;
+
+    // Basic Info
     document.getElementById('userName').textContent = user.login;
     document.getElementById('userId').textContent = `ID: ${user.id}`;
     document.getElementById('userAvatar').textContent = user.login.charAt(0).toUpperCase();
@@ -199,10 +200,30 @@ function displayUserProfile(data) {
     // Audits
     displayAudits(user.audits);
 
-    // Generate Graphs
+    // Personal Info
+    const infoList = document.getElementById('personalInfo');
+    if (infoList) {
+        infoList.innerHTML = `
+          <li><strong>Name:</strong> ${attrs.firstName} ${attrs.middleName} ${attrs.lastName}</li>
+          <li><strong>Gender:</strong> ${attrs.gender}</li>
+          <li><strong>Country:</strong> ${attrs.country}</li>
+          <li><strong>Phone:</strong> ${attrs.phone}</li>
+          <li><strong>Email:</strong> ${attrs.email}</li>
+          <li><strong>Language:</strong> ${attrs.language}</li>
+        `;
+    }
+
+    // Graphs
     generateXPOverTimeGraph(data.transaction);
     generateProgressGraph(data.progress);
 }
+
+// Toggle personal info visibility
+document.getElementById('userHeaderClickable').addEventListener('click', () => {
+    const card = document.getElementById('personalInfoCard');
+    card.classList.toggle('hidden');
+});
+
 
 // Display Skills
 function displaySkills(skills) {
