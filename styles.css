@@ -1,0 +1,279 @@
+:root {
+    --primary: #4a6cfa;
+    --primary-dark: #3756d6;
+    --secondary: #6c757d;
+    --dark: #343a40;
+    --light: #f8f9fa;
+    --gray: #e9ecef;
+    --success: #28a745;
+    --danger: #dc3545;
+    --warning: #ffc107;
+    --info: #17a2b8;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f5f7fb;
+    color: #333;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.card {
+    background-color: white;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+#loginContainer {
+    max-width: 400px;
+    margin: 5rem auto;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+.btn {
+    display: inline-block;
+    background-color: var(--primary);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.2s;
+}
+
+.btn:hover {
+    background-color: var(--primary-dark);
+}
+
+.error-message {
+    color: var(--danger);
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+.profile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white;
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+}
+
+#userAvatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: var(--primary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 2rem;
+    font-weight: bold;
+    margin-right: 1.5rem;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.skills-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.skill-tag {
+    background-color: #e9f5ff;
+    color: var(--primary);
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-size: 0.9rem;
+}
+
+.skill-tag .amount {
+    font-weight: bold;
+    margin-left: 0.25rem;
+}
+
+#auditRatio {
+    text-align: center;
+    padding: 1rem 0;
+    font-size: 1.2rem;
+}
+
+.ratio-display {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: var(--primary);
+    margin: 1rem 0;
+}
+
+#audits {
+    margin-top: 1rem;
+}
+
+.audit-item {
+    padding: 1rem;
+    border-bottom: 1px solid var(--gray);
+}
+
+.audit-item:last-child {
+    border-bottom: none;
+}
+
+.audit-path {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.audit-info {
+    color: var(--secondary);
+    font-size: 0.9rem;
+}
+
+.stats-tabs {
+    display: flex;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--gray);
+}
+
+.tab-btn {
+    background: none;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    cursor: pointer;
+    font-size: 1rem;
+    color: var(--secondary);
+    border-bottom: 3px solid transparent;
+}
+
+.tab-btn.active {
+    color: var(--primary);
+    border-bottom: 3px solid var(--primary);
+}
+
+.tab-pane {
+    display: none;
+}
+
+.tab-pane.active {
+    display: block;
+}
+
+svg {
+    overflow: visible;
+}
+
+.tick line {
+    stroke: #eee;
+}
+
+.tick text {
+    fill: #666;
+    font-size: 12px;
+}
+
+.axis-label {
+    font-size: 14px;
+    fill: #333;
+}
+
+.bar {
+    fill: var(--primary);
+    opacity: 0.8;
+    transition: opacity 0.2s;
+}
+
+.bar:hover {
+    opacity: 1;
+}
+
+.line {
+    fill: none;
+    stroke: var(--primary);
+    stroke-width: 3;
+}
+
+.dot {
+    fill: var(--primary);
+    stroke: white;
+    stroke-width: 2;
+}
+
+.tooltip {
+    position: absolute;
+    padding: 0.5rem;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    border-radius: 4px;
+    pointer-events: none;
+    font-size: 0.875rem;
+}
+
+.legend {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    margin-right: 1.5rem;
+}
+
+.legend-color {
+    width: 12px;
+    height: 12px;
+    margin-right: 0.5rem;
+    border-radius: 2px;
+}
+
+.pie-slice {
+    transition: transform 0.2s;
+}
+
+.pie-slice:hover {
+    transform: translateX(10px);
+}
