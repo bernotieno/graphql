@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GraphQL Profile</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div id="loginContainer" class="card">
+            <h2>Login</h2>
+            <div class="form-group">
+                <input type="text" id="username" placeholder="Username or Email">
+            </div>
+            <div class="form-group">
+                <input type="password" id="password" placeholder="Password">
+            </div>
+            <div id="loginError" class="error-message"></div>
+            <button id="loginBtn" class="btn">Login</button>
+        </div>
+
+        <div id="profileContainer" class="hidden">
+            <header class="profile-header">
+                <div class="user-info">
+                    <div id="userAvatar"></div>
+                    <div>
+                        <h1 id="userName"></h1>
+                        <p id="userId"></p>
+                    </div>
+                </div>
+                <button id="logoutBtn" class="btn">Logout</button>
+            </header>
+
+            <div class="stats-grid">
+                <div class="card">
+                    <h3>Skills</h3>
+                    <div id="skills" class="skills-container"></div>
+                </div>
+
+                <div class="card">
+                    <h3>Audit Ratio</h3>
+                    <div id="auditRatio"></div>
+                </div>
+
+                <div class="card">
+                    <h3>Active Audits</h3>
+                    <div id="audits"></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Statistics</h3>
+                <div class="stats-tabs">
+                    <button class="tab-btn active" data-tab="xpGraph">XP Over Time</button>
+                    <button class="tab-btn" data-tab="progressGraph">Progress Graph</button>
+                </div>
+                <div class="tab-content">
+                    <div id="xpGraph" class="tab-pane active">
+                        <svg id="xpOverTimeGraph" width="100%" height="400"></svg>
+                    </div>
+                    <div id="progressGraph" class="tab-pane">
+                        <svg id="progressRatioGraph" width="100%" height="400"></svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
