@@ -231,20 +231,27 @@ function displaySkills(skills) {
     skillsContainer.innerHTML = '';
 
     if (skills && skills.length > 0) {
-        // Filter out any non-skill transactions
-        const skillsData = skills.filter(skill => skill.type.startsWith('skill_'));
-        
-        // Take top 10 skills
-        const topSkills = skillsData.slice(0, 10);
-        
-        topSkills.forEach(skill => {
+        const maxSkillsMap = {};
+
+        // Find max amount per skill type
+        for (const skill of skills) {
+            const type = skill.type;
+            if (!maxSkillsMap[type] || skill.amount > maxSkillsMap[type].amount) {
+                maxSkillsMap[type] = skill;
+            }
+        }
+
+        // Convert map to sorted array by amount (desc)
+        const uniqueSkills = Object.values(maxSkillsMap).sort((a, b) => b.amount - a.amount);
+
+        uniqueSkills.forEach(skill => {
             const skillName = skill.type.replace('skill_', '').replace(/_/g, ' ');
             const formattedName = skillName.charAt(0).toUpperCase() + skillName.slice(1);
-            
+
             const skillElement = document.createElement('div');
             skillElement.className = 'skill-tag';
             skillElement.innerHTML = `
-                ${formattedName} <span class="amount">${skill.amount}</span>
+                ${formattedName} <span class="amount">${skill.amount}%</span>
             `;
             skillsContainer.appendChild(skillElement);
         });
@@ -253,12 +260,13 @@ function displaySkills(skills) {
     }
 }
 
+
 // Display Audit Ratio
 function displayAuditRatio(ratio) {
     const auditRatioElement = document.getElementById('auditRatio');
-    
+
     if (ratio !== null && ratio !== undefined) {
-        const formattedRatio = parseFloat(ratio).toFixed(2);
+        const formattedRatio = parseFloat(ratio).toFixed(1); // Round to 1 decimal place
         auditRatioElement.innerHTML = `
             <p>Your current audit ratio is:</p>
             <div class="ratio-display">${formattedRatio}</div>
@@ -268,6 +276,7 @@ function displayAuditRatio(ratio) {
         auditRatioElement.innerHTML = '<p>No audit ratio data available</p>';
     }
 }
+
 
 // Display Audits
 function displayAudits(audits) {
