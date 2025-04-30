@@ -1,0 +1,200 @@
+/* Base Styles and CSS Variables */
+:root {
+  /* Light Theme Colors */
+  --light-bg: #f4f4f5;
+  --light-bg-secondary: #ffffff;
+  --light-text: #1f2937;
+  --light-text-secondary: #4b5563;
+  --light-border: #e5e7eb;
+  --light-accent: #ec4899;
+  --light-accent-hover: #db2777;
+  --light-success: #10b981;
+  --light-warning: #f59e0b;
+  --light-error: #ef4444;
+  --light-shadow: rgba(0, 0, 0, 0.1);
+  
+  /* Dark Theme Colors */
+  --dark-bg: #111827;
+  --dark-bg-secondary: #1f2937;
+  --dark-text: #f9fafb;
+  --dark-text-secondary: #d1d5db;
+  --dark-border: #374151;
+  --dark-accent: #f472b6;
+  --dark-accent-hover: #ec4899;
+  --dark-success: #34d399;
+  --dark-warning: #fbbf24;
+  --dark-error: #f87171;
+  --dark-shadow: rgba(0, 0, 0, 0.3);
+  
+  /* Spacing System */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-xxl: 48px;
+  
+  /* Border Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.25s ease;
+  --transition-slow: 0.35s ease;
+  
+  /* Z-index layers */
+  --z-base: 1;
+  --z-dropdown: 10;
+  --z-modal: 100;
+  --z-overlay: 1000;
+}
+
+/* Default Light Theme Variables */
+.theme-light {
+  --bg-color: var(--light-bg);
+  --bg-secondary: var(--light-bg-secondary);
+  --text-color: var(--light-text);
+  --text-secondary: var(--light-text-secondary);
+  --border-color: var(--light-border);
+  --accent-color: var(--light-accent);
+  --accent-hover: var(--light-accent-hover);
+  --success-color: var(--light-success);
+  --warning-color: var(--light-warning);
+  --error-color: var(--light-error);
+  --shadow: var(--light-shadow);
+  --chart-color-1: #0ea5e9;
+  --chart-color-2: #8b5cf6;
+  --chart-color-3: #f59e0b;
+  --chart-color-4: #10b981;
+  --chart-color-5: #ef4444;
+  --chart-grid: #e5e7eb;
+}
+
+/* Dark Theme Variables */
+.theme-dark {
+  --bg-color: var(--dark-bg);
+  --bg-secondary: var(--dark-bg-secondary);
+  --text-color: var(--dark-text);
+  --text-secondary: var(--dark-text-secondary);
+  --border-color: var(--dark-border);
+  --accent-color: var(--dark-accent);
+  --accent-hover: var(--dark-accent-hover);
+  --success-color: var(--dark-success);
+  --warning-color: var(--dark-warning);
+  --error-color: var(--dark-error);
+  --shadow: var(--dark-shadow);
+  --chart-color-1: #38bdf8;
+  --chart-color-2: #a78bfa;
+  --chart-color-3: #fbbf24;
+  --chart-color-4: #34d399;
+  --chart-color-5: #f87171;
+  --chart-grid: #374151;
+}
+
+/* Reset and Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--text-color);
+  background-color: var(--bg-color);
+  transition: background-color var(--transition-normal), color var(--transition-normal);
+}
+
+#app {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: var(--spacing-md);
+}
+
+h1 {
+  font-size: 1.75rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+}
+
+h3 {
+  font-size: 1.25rem;
+}
+
+p {
+  margin-bottom: var(--spacing-md);
+}
+
+a {
+  color: var(--accent-color);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--accent-hover);
+}
+
+/* Utility Classes */
+.hidden {
+  display: none !important;
+}
+
+.loading-text {
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+.error-message {
+  color: var(--error-color);
+  font-size: 0.875rem;
+  margin: var(--spacing-sm) 0;
+  min-height: 1.25rem;
+}
+
+/* Responsive breakpoints */
+@media (max-width: 768px) {
+  html {
+    font-size: 14px;
+  }
+  
+  .content-wrapper {
+    flex-direction: column;
+  }
+  
+  .sidebar {
+    width: 100%;
+    position: relative;
+    height: auto;
+  }
+  
+  .main-content {
+    margin-left: 0;
+  }
+  
+  .dashboard-grid,
+  .statistics-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .dashboard-grid,
+  .statistics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
