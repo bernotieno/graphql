@@ -315,7 +315,7 @@ function generateXPOverTimeGraph(transactions) {
         return;
     }
 
-    const margin = { top: 40, right: 30, bottom: 60, left: 60 };
+    const margin = { top: 40, right: 40, bottom: 60, left: 60 };
     const width = svg.clientWidth - margin.left - margin.right;
     const height = svg.clientHeight - margin.top - margin.bottom;
 
@@ -341,6 +341,30 @@ function generateXPOverTimeGraph(transactions) {
     g.setAttribute('transform', `translate(${margin.left},${margin.top})`);
     svg.appendChild(g);
 
+    // Add gradient for area fill
+    const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+    const gradient = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
+    gradient.setAttribute('id', 'area-gradient');
+    gradient.setAttribute('x1', '0%');
+    gradient.setAttribute('y1', '0%');
+    gradient.setAttribute('x2', '0%');
+    gradient.setAttribute('y2', '100%');
+    
+    const stop1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+    stop1.setAttribute('offset', '0%');
+    stop1.setAttribute('stop-color', 'var(--primary)');
+    stop1.setAttribute('stop-opacity', '0.3');
+    
+    const stop2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+    stop2.setAttribute('offset', '100%');
+    stop2.setAttribute('stop-color', 'var(--primary)');
+    stop2.setAttribute('stop-opacity', '0');
+    
+    gradient.appendChild(stop1);
+    gradient.appendChild(stop2);
+    defs.appendChild(gradient);
+    svg.insertBefore(defs, svg.firstChild);
+
     // X scale
     const xMin = new Date(Math.min(...data.map(d => d.date)));
     const xMax = new Date(Math.max(...data.map(d => d.date)));
@@ -358,22 +382,26 @@ function generateXPOverTimeGraph(transactions) {
         return height - (value / yMax * height);
     };
 
-    // Line generator
-    let pathD = '';
-    data.forEach((d, i) => {
-        const x = xScale(d.date);
-        const y = yScale(d.cumulativeXP);
-        
-        if (i === 0) {
-            pathD += `M ${x} ${y}`;
-        } else {
-            pathD += ` L ${x} ${y}`;
-        }
-    });
+    // Create area path
+    let areaPath = `M ${xScale(data[0].date)} ${yScale(data[0].cumulativeXP)}`;
+    for (let i = 1; i < data.length; i++) {
+        areaPath += ` L ${xScale(data[i].date)} ${yScale(data[i].cumulativeXP)}`;
+    }
+    areaPath += ` L ${xScale(data[data.length-1].date)} ${height} L ${xScale(data[0].date)} ${height} Z`;
 
-    // Add the line path
+    const area = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    area.setAttribute('d', areaPath);
+    area.setAttribute('class', 'area');
+    g.appendChild(area);
+
+    // Create line path
+    let linePath = `M ${xScale(data[0].date)} ${yScale(data[0].cumulativeXP)}`;
+    for (let i = 1; i < data.length; i++) {
+        linePath += ` L ${xScale(data[i].date)} ${yScale(data[i].cumulativeXP)}`;
+    }
+
     const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    path.setAttribute('d', pathD);
+    path.setAttribute('d', linePath);
     path.setAttribute('class', 'line');
     g.appendChild(path);
 
@@ -382,7 +410,7 @@ function generateXPOverTimeGraph(transactions) {
         const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
         circle.setAttribute('cx', xScale(d.date));
         circle.setAttribute('cy', yScale(d.cumulativeXP));
-        circle.setAttribute('r', 5);
+        circle.setAttribute('r', 4);
         circle.setAttribute('class', 'dot');
         
         // Add title for tooltip
@@ -396,6 +424,7 @@ function generateXPOverTimeGraph(transactions) {
     // X Axis
     const xAxis = document.createElementNS('http://www.w3.org/2000/svg', 'g');
     xAxis.setAttribute('transform', `translate(0,${height})`);
+    xAxis.setAttribute('class', 'axis');
     
     // X Axis line
     const xAxisLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
@@ -403,7 +432,8 @@ function generateXPOverTimeGraph(transactions) {
     xAxisLine.setAttribute('y1', 0);
     xAxisLine.setAttribute('x2', width);
     xAxisLine.setAttribute('y2', 0);
-    xAxisLine.setAttribute('stroke', '#000');
+    xAxisLine.setAttribute('stroke', 'var(--border-color)');
+    xAxisLine.setAttribute('stroke-width', '1');
     xAxis.appendChild(xAxisLine);
     
     // X Axis ticks
@@ -419,14 +449,14 @@ function generateXPOverTimeGraph(transactions) {
         tick.setAttribute('y1', 0);
         tick.setAttribute('x2', x);
         tick.setAttribute('y2', 5);
-        tick.setAttribute('stroke', '#000');
+        tick.setAttribute('stroke', 'var(--border-color)');
         xAxis.appendChild(tick);
         
         const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         label.setAttribute('x', x);
         label.setAttribute('y', 20);
         label.setAttribute('text-anchor', 'middle');
-        label.setAttribute('class', 'tick');
+        label.setAttribute('class', 'axis-text');
         label.textContent = tickDate.toLocaleDateString();
         xAxis.appendChild(label);
     }
@@ -435,6 +465,7 @@ function generateXPOverTimeGraph(transactions) {
 
     // Y Axis
     const yAxis = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    yAxis.setAttribute('class', 'axis');
     
     // Y Axis line
     const yAxisLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
@@ -442,7 +473,8 @@ function generateXPOverTimeGraph(transactions) {
     yAxisLine.setAttribute('y1', 0);
     yAxisLine.setAttribute('x2', 0);
     yAxisLine.setAttribute('y2', height);
-    yAxisLine.setAttribute('stroke', '#000');
+    yAxisLine.setAttribute('stroke', 'var(--border-color)');
+    yAxisLine.setAttribute('stroke-width', '1');
     yAxis.appendChild(yAxisLine);
     
     // Y Axis ticks
@@ -458,45 +490,174 @@ function generateXPOverTimeGraph(transactions) {
         tick.setAttribute('y1', y);
         tick.setAttribute('x2', 0);
         tick.setAttribute('y2', y);
-        tick.setAttribute('stroke', '#000');
+        tick.setAttribute('stroke', 'var(--border-color)');
         yAxis.appendChild(tick);
         
         const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         label.setAttribute('x', -10);
         label.setAttribute('y', y + 5);
         label.setAttribute('text-anchor', 'end');
-        label.setAttribute('class', 'tick');
-        label.textContent = Math.round(tickValue);
+        label.setAttribute('class', 'axis-text');
+        label.textContent = Math.round(tickValue).toLocaleString();
         yAxis.appendChild(label);
     }
     
     g.appendChild(yAxis);
 
-    // Add axis labels
-    const xLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    xLabel.setAttribute('x', width / 2);
-    xLabel.setAttribute('y', height + 45);
-    xLabel.setAttribute('text-anchor', 'middle');
-    xLabel.setAttribute('class', 'axis-label');
-    xLabel.textContent = 'Date';
-    g.appendChild(xLabel);
-    
-    const yLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    yLabel.setAttribute('transform', `translate(-40,${height/2}) rotate(-90)`);
-    yLabel.setAttribute('text-anchor', 'middle');
-    yLabel.setAttribute('class', 'axis-label');
-    yLabel.textContent = 'Cumulative XP';
-    g.appendChild(yLabel);
-
-    // Add title
+    // Add chart title
     const title = document.createElementNS('http://www.w3.org/2000/svg', 'text');
     title.setAttribute('x', width / 2);
     title.setAttribute('y', -15);
     title.setAttribute('text-anchor', 'middle');
-    title.setAttribute('font-weight', 'bold');
-    title.setAttribute('font-size', '16px');
+    title.setAttribute('class', 'chart-title');
     title.textContent = 'XP Progress Over Time';
     g.appendChild(title);
+}
+
+// Replace your generateProgressGraph function with this:
+function generateProgressGraph(progressData) {
+    const svg = document.getElementById('progressRatioGraph');
+    svg.innerHTML = '';
+    
+    if (!progressData || progressData.length === 0) {
+        svg.innerHTML = '<text x="50%" y="50%" text-anchor="middle">No progress data available</text>';
+        return;
+    }
+
+    const margin = { top: 40, right: 40, bottom: 60, left: 40 };
+    const width = svg.clientWidth - margin.left - margin.right;
+    const height = svg.clientHeight - margin.top - margin.bottom;
+    const radius = Math.min(width, height) / 2 - 20;
+
+    // Count pass/fail
+    const results = progressData.reduce((acc, curr) => {
+        const result = curr.grade >= 1 ? 'PASS' : 'FAIL';
+        acc[result] = (acc[result] || 0) + 1;
+        return acc;
+    }, {});
+
+    // Create data array for pie chart
+    const data = [
+        { label: 'PASS', value: results.PASS || 0, color: 'var(--success)' },
+        { label: 'FAIL', value: results.FAIL || 0, color: 'var(--danger)' }
+    ].filter(d => d.value > 0);
+
+    const total = data.reduce((sum, d) => sum + d.value, 0);
+    if (total === 0) {
+        svg.innerHTML = '<text x="50%" y="50%" text-anchor="middle">No progress data available</text>';
+        return;
+    }
+
+    // Create chart area
+    const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    g.setAttribute('transform', `translate(${width / 2 + margin.left},${height / 2 + margin.top})`);
+    svg.appendChild(g);
+
+    // Draw pie slices
+    let startAngle = 0;
+    data.forEach(d => {
+        const percentage = d.value / total;
+        const endAngle = startAngle + percentage * 2 * Math.PI;
+        
+        // Calculate arc path
+        const x1 = radius * Math.sin(startAngle);
+        const y1 = -radius * Math.cos(startAngle);
+        const x2 = radius * Math.sin(endAngle);
+        const y2 = -radius * Math.cos(endAngle);
+        
+        const largeArc = percentage > 0.5 ? 1 : 0;
+        
+        const pathData = `M 0 0 L ${x1} ${y1} A ${radius} ${radius} 0 ${largeArc} 1 ${x2} ${y2} Z`;
+        
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', pathData);
+        path.setAttribute('fill', d.color);
+        path.setAttribute('class', 'pie-slice');
+        
+        // Add title for tooltip
+        const title = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+        title.textContent = `${d.label}: ${d.value} (${(percentage * 100).toFixed(1)}%)`;
+        path.appendChild(title);
+        
+        g.appendChild(path);
+        
+        // Add center label for large enough slices
+        if (percentage > 0.1) {
+            const labelAngle = startAngle + (endAngle - startAngle) / 2;
+            const labelRadius = radius * 0.7;
+            const labelX = labelRadius * Math.sin(labelAngle);
+            const labelY = -labelRadius * Math.cos(labelAngle);
+            
+            const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            label.setAttribute('x', labelX);
+            label.setAttribute('y', labelY);
+            label.setAttribute('text-anchor', 'middle');
+            label.setAttribute('dominant-baseline', 'middle');
+            label.setAttribute('fill', 'white');
+            label.setAttribute('font-weight', '600');
+            label.setAttribute('font-size', '12px');
+            label.textContent = `${(percentage * 100).toFixed(0)}%`;
+            g.appendChild(label);
+        }
+        
+        startAngle = endAngle;
+    });
+
+    // Add donut hole
+    const centerCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    centerCircle.setAttribute('cx', 0);
+    centerCircle.setAttribute('cy', 0);
+    centerCircle.setAttribute('r', radius * 0.5);
+    centerCircle.setAttribute('fill', 'var(--card-color)');
+    centerCircle.setAttribute('class', 'pie-center');
+    g.appendChild(centerCircle);
+
+    // Add total count in center
+    const centerText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    centerText.setAttribute('x', 0);
+    centerText.setAttribute('y', 0);
+    centerText.setAttribute('text-anchor', 'middle');
+    centerText.setAttribute('dominant-baseline', 'middle');
+    centerText.setAttribute('class', 'pie-center-text');
+    centerText.textContent = `${total}`;
+    g.appendChild(centerText);
+
+    // Add title
+    const title = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    title.setAttribute('x', 0);
+    title.setAttribute('y', -radius - 25);
+    title.setAttribute('text-anchor', 'middle');
+    title.setAttribute('class', 'chart-title');
+    title.textContent = 'Projects Pass/Fail Ratio';
+    g.appendChild(title);
+
+    // Create legend container
+    const legend = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    legend.setAttribute('transform', `translate(${-width/2 + margin.left}, ${radius + 40})`);
+    
+    // Add legend items
+    data.forEach((d, i) => {
+        const legendItem = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        legendItem.setAttribute('transform', `translate(${i * 120}, 0)`);
+        
+        const colorSquare = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        colorSquare.setAttribute('width', 16);
+        colorSquare.setAttribute('height', 16);
+        colorSquare.setAttribute('fill', d.color);
+        colorSquare.setAttribute('rx', 3);
+        legendItem.appendChild(colorSquare);
+        
+        const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        label.setAttribute('x', 24);
+        label.setAttribute('y', 12);
+        label.setAttribute('fill', 'var(--text-color)');
+        label.textContent = `${d.label}: ${d.value}`;
+        legendItem.appendChild(label);
+        
+        legend.appendChild(legendItem);
+    });
+    
+    g.appendChild(legend);
 }
 
 // Generate Progress Graph (Pass/Fail ratio)
