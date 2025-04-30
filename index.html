@@ -1,78 +1,190 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GraphQL Profile</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Profile Dashboard</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
 </head>
-<body>
-    <button id="themeToggle" class="btn" style="position: absolute; top: 1rem; right: 1rem;">
-        🌙 Toggle Theme
-    </button>    
-    <div class="container">
-        <div id="loginContainer" class="card">
-            <h2>Login</h2>
-            <div class="form-group">
-                <input type="text" id="username" placeholder="Username or Email">
-            </div>
-            <div class="form-group">
-                <input type="password" id="password" placeholder="Password">
-            </div>
-            <div id="loginError" class="error-message"></div>
-            <button id="loginBtn" class="btn">Login</button>
+<body class="theme-light">
+  <div id="app">
+    <!-- Login Page -->
+    <div id="login-page" class="login-container">
+      <div class="login-card">
+        <div class="login-header">
+          <div id="login-logo"></div>
+          <h1>Profile Dashboard</h1>
         </div>
+        <form id="login-form">
+          <div class="form-group">
+            <label for="username">Username or Email</label>
+            <input type="text" id="username" name="username" required>
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required>
+          </div>
+          <div class="error-message" id="login-error"></div>
+          <button type="submit" class="btn-primary">Sign In</button>
+        </form>
+      </div>
+    </div>
 
-        <div id="profileContainer" class="hidden">
-            <header class="profile-header">
-                <div class="user-info">
-                    <div id="userHeaderClickable" class="user-info" style="cursor: pointer;">
-                    <div id="userAvatar"></div>
-                    <div>
-                        <h1 id="userName"></h1>
-                        <p id="userId"></p>
-                    </div>
-                    </div>
+    <!-- Main Application -->
+    <div id="main-app" class="hidden">
+      <!-- Top Navigation -->
+      <header class="top-nav">
+        <div class="nav-left">
+          <div id="app-logo"></div>
+          <h1>Profile Dashboard</h1>
+        </div>
+        <div class="nav-right">
+          <button id="theme-toggle" class="icon-button" aria-label="Toggle theme">
+            <span class="icon-light">☀️</span>
+            <span class="icon-dark">🌙</span>
+          </button>
+          <div class="user-avatar" id="user-avatar"></div>
+          <button id="logout-button" class="btn-secondary">Logout</button>
+        </div>
+      </header>
+
+      <div class="content-wrapper">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+          <nav>
+            <ul>
+              <li><a href="#dashboard" class="nav-link active" data-section="dashboard">Dashboard</a></li>
+              <li><a href="#profile" class="nav-link" data-section="profile">Profile</a></li>
+              <li><a href="#statistics" class="nav-link" data-section="statistics">Statistics</a></li>
+            </ul>
+          </nav>
+          <div class="sidebar-toggle" id="sidebar-toggle"></div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+          <!-- Dashboard Section -->
+          <section id="dashboard-section" class="content-section active">
+            <div class="section-header">
+              <h2>Dashboard</h2>
+            </div>
+            <div class="dashboard-grid">
+              <div class="card">
+                <h3>User Overview</h3>
+                <div id="user-overview" class="card-content">
+                  <p class="loading-text">Loading user data...</p>
                 </div>
-                <button id="logoutBtn" class="btn">Logout</button>
-            </header>
-            <div id="personalInfoCard" class="card hidden">
-                <h3>Personal Information</h3>
-                <ul id="personalInfo" class="info-list"></ul>
               </div>
-            <div class="stats-grid">
-                <div class="card">
-                    <h3>Skills</h3>
-                    <div id="skills" class="skills-container"></div>
+              <div class="card">
+                <h3>Skill Distribution</h3>
+                <div id="skills-chart" class="chart-container">
+                  <p class="loading-text">Loading skills data...</p>
                 </div>
+              </div>
+              <div class="card">
+                <h3>Recent Activity</h3>
+                <div id="recent-activity" class="card-content">
+                  <p class="loading-text">Loading activity data...</p>
+                </div>
+              </div>
+              <div class="card">
+                <h3>Performance</h3>
+                <div id="performance-chart" class="chart-container">
+                  <p class="loading-text">Loading performance data...</p>
+                </div>
+              </div>
+            </div>
+          </section>
 
-                <div class="card">
-                    <h3>Audit Ratio</h3>
-                    <div id="auditRatio"></div>
-                </div>
-
-                <div class="card">
-                    <h3>Active Audits</h3>
-                    <div id="audits"></div>
-                </div>
+          <!-- Profile Section -->
+          <section id="profile-section" class="content-section">
+            <div class="section-header">
+              <h2>Profile Information</h2>
             </div>
             <div class="card">
-                <h3>Statistics</h3>
-                <div class="stats-tabs">
-                    <button class="tab-btn active" data-tab="xpGraph">XP Over Time</button>
-                    <button class="tab-btn" data-tab="progressGraph">Progress Graph</button>
+              <div class="card-header">
+                <h3>Personal Details</h3>
+                <button id="edit-profile-toggle" class="btn-icon">Edit</button>
+              </div>
+              <div id="profile-display" class="card-content">
+                <p class="loading-text">Loading profile data...</p>
+              </div>
+              <form id="profile-edit-form" class="hidden">
+                <div class="form-grid">
+                  <div class="form-group">
+                    <label for="display-name">Display Name</label>
+                    <input type="text" id="display-name" name="displayName">
+                  </div>
+                  <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email">
+                  </div>
+                  <div class="form-group">
+                    <label for="bio">Bio</label>
+                    <textarea id="bio" name="bio" rows="3"></textarea>
+                  </div>
                 </div>
-                <div class="tab-content">
-                    <div id="xpGraph" class="tab-pane active">
-                        <svg id="xpOverTimeGraph" width="100%" height="400"></svg>
-                    </div>
-                    <div id="progressGraph" class="tab-pane">
-                        <svg id="progressRatioGraph" width="100%" height="400"></svg>
-                    </div>
+                <div class="form-actions">
+                  <button type="button" id="cancel-edit" class="btn-secondary">Cancel</button>
+                  <button type="submit" class="btn-primary">Save Changes</button>
                 </div>
+              </form>
             </div>
-        </div>
+          </section>
+
+          <!-- Statistics Section -->
+          <section id="statistics-section" class="content-section">
+            <div class="section-header">
+              <h2>Statistics</h2>
+            </div>
+            <div class="statistics-grid">
+              <div class="card">
+                <h3>Skill Progress</h3>
+                <div id="skill-progress-chart" class="chart-container large">
+                  <p class="loading-text">Loading skill progress data...</p>
+                </div>
+              </div>
+              <div class="card">
+                <h3>Audit Ratio</h3>
+                <div id="audit-ratio-chart" class="chart-container">
+                  <p class="loading-text">Loading audit ratio data...</p>
+                </div>
+              </div>
+              <div class="card">
+                <h3>Event Participation</h3>
+                <div id="events-chart" class="chart-container">
+                  <p class="loading-text">Loading events data...</p>
+                </div>
+              </div>
+              <div class="card">
+                <h3>Progress Timeline</h3>
+                <div id="progress-timeline" class="chart-container large">
+                  <p class="loading-text">Loading progress timeline data...</p>
+                </div>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
     </div>
-    <script src="script.js"></script>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay hidden">
+      <div class="spinner"></div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/graphql.js"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/components/nav.js"></script>
+  <script src="js/components/sidebar.js"></script>
+  <script src="js/visualizations/charts.js"></script>
+  <script src="js/components/profile.js"></script>
+  <script src="js/main.js"></script>
 </body>
 </html>
