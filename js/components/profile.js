@@ -339,7 +339,7 @@ const Profile = (function() {
     }
     
     // Transform data for chart
-    const chartData = progress.slice(0, 10).map(p => {
+    const chartData = progress.slice(0, 15).map(p => {
       return {
         x: formatDate(p.createdAt, true),
         y: p.grade || 0
