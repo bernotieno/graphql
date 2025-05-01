@@ -178,7 +178,7 @@ const Profile = (function() {
     bio.appendChild(bioTitle);
     
     const bioContent = document.createElement('p');
-    bioContent.textContent = data.attrs && data.attrs.bio ? data.attrs.bio : 'No bio available.';
+    bioContent.textContent = data[0].attrs && data[0].attrs.bio ? data[0].attrs.bio : 'No bio available.';
     bio.appendChild(bioContent);
     
     displayGrid.appendChild(bio);
@@ -482,7 +482,7 @@ const Profile = (function() {
       updateSkillProgressChart(data.skills);
     }
     
-    // Update recent activity
+    // Update recent activityskills
     updateRecentActivity(data);
     
     // Update user overview
