@@ -40,12 +40,10 @@ const Auth = (function() {
       
       const data = await response.json();
       console.log('Login response:', data);
-      // if (typeof data.token !== 'string' || data.token.split('.').length !== 3) {
-      //   throw new Error(`Invalid JWT received from server: ${data.token}`);
-      // }
+     
       
       // Store the JWT token
-      localStorage.setItem(AUTH_TOKEN, data.token);
+      localStorage.setItem(AUTH_TOKEN, data);
       
       return { success: true, data };
     } catch (error) {
