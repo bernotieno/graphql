@@ -197,14 +197,16 @@
 
 .statistics-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  height: 1200px;
+  grid-template-columns: repeat(auto-fill, minmax(600px, 1fr));
   gap: var(--spacing-lg);
 }
 
 /* Chart Container */
 .chart-container {
   display: flex;
-  /* align-items: center; */
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
   height: 210px;
   width: 100%;
@@ -213,7 +215,7 @@
 }
 
 .chart-container.large {
-  height: 300px;
+  height: 400px;
   grid-column: span 2;
 }
 
