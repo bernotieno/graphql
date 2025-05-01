@@ -227,7 +227,7 @@ const Profile = (function() {
     });
     
     // Create chart
-    Charts.createBarChart('skills-chart', chartData, {
+    Charts.createPieChart('skills-chart', chartData, {
       barColor: (d, i) => APP_CONFIG.CHART_COLORS[i % APP_CONFIG.CHART_COLORS.length]
     });
   }
@@ -244,9 +244,10 @@ const Profile = (function() {
     activityEl.innerHTML = '';
     
     // Get transactions
-    const transactions = data.transaction || [];
+    const progress = data.progress || [];
+    console.log("Trans",progress)
     
-    if (transactions.length === 0) {
+    if (progress.length === 0) {
       const noActivity = document.createElement('p');
       noActivity.textContent = 'No recent activity available.';
       activityEl.appendChild(noActivity);
@@ -258,13 +259,15 @@ const Profile = (function() {
     activityList.className = 'activity-list';
     
     // Add activity items
-    transactions.slice(0, 5).forEach(transaction => {
+    progress.slice(0, 5).forEach(transaction => {
       const item = document.createElement('li');
       item.className = 'activity-item';
       
       const title = document.createElement('div');
-      title.textContent = formatTransactionType(transaction.type);
+      const lastSegment = transaction.path.split('/').filter(Boolean).pop();
+      title.textContent = formatTransactionType(lastSegment);
       title.className = 'activity-title';
+
       
       const date = document.createElement('div');
       date.textContent = formatDate(transaction.createdAt);
@@ -475,15 +478,17 @@ const Profile = (function() {
    */
   function updateVisualizations(data) {
     if (!data) return;
+    console.log("Update1", data)
     
     // Update skills chart
-    if (data.skills) {
-      updateSkillsDisplay(data.skills);
-      updateSkillProgressChart(data.skills);
+    if (data.user[0].skills) {
+      updateSkillsDisplay(data.user[0].skills);
+      updateSkillProgressChart(data.user[0].skills);
     }
     
     // Update recent activityskills
     updateRecentActivity(data);
+    // console.log("this is progress", data.progress.path)
     
     // Update user overview
     updateUserOverview(data);
