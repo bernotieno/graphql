@@ -158,6 +158,7 @@ const Charts = (function() {
     // Create chart group
     const chart = document.createElementNS('http://www.w3.org/2000/svg', 'g');
     chart.setAttribute('transform', `translate(${opts.width / 2},${opts.height / 2})`);
+    chart.classList.add('center_g');
     svg.appendChild(chart);
     
     // Calculate total value
