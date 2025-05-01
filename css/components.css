@@ -203,7 +203,10 @@
 
 /* Chart Container */
 .chart-container {
-  height: 200px;
+  display: flex;
+  /* align-items: center; */
+  justify-content: center;
+  height: 210px;
   width: 100%;
   position: relative;
   padding: var(--spacing-md);
