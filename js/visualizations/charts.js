@@ -289,13 +289,28 @@ const Charts = (function() {
     chart.setAttribute('transform', `translate(${opts.margin.left},${opts.margin.top})`);
     svg.appendChild(chart);
     
-    // Find min/max values
-    const xValues = data.map(d => d.x);
-    const yValues = data.map(d => d.y);
+    // Convert date strings to timestamps (milliseconds)
+    const xValues = data.map(d => new Date(d.x).getTime()).filter(v => !isNaN(v));
+    const yValues = data.map(d => +d.y).filter(v => !isNaN(v));
+
     const xMin = Math.min(...xValues);
     const xMax = Math.max(...xValues);
     const yMin = Math.min(...yValues);
     const yMax = Math.max(...yValues);
+
+        // Calculate points
+    const points = data.map(d => {
+      const dx = new Date(d.x).getTime(); // Date → timestamp
+      const dy = +d.y;
+
+      const x = isNaN(dx) ? NaN : ((dx - xMin) / (xMax - xMin)) * chartWidth;
+      const y = isNaN(dy) ? NaN : chartHeight - ((dy - yMin) / (yMax - yMin)) * chartHeight;
+
+      return { x, y };
+    });
+    console.log("These are the points",points);
+
+
     
     // Create axes
     createXAxis(chart, data.map(d => ({ name: d.x })), chartWidth, chartHeight);
@@ -305,12 +320,6 @@ const Charts = (function() {
     const linePath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     chart.appendChild(linePath);
     
-    // Calculate points
-    const points = data.map(d => {
-      const x = ((d.x - xMin) / (xMax - xMin)) * chartWidth;
-      const y = chartHeight - ((d.y - yMin) / (yMax - yMin)) * chartHeight;
-      return { x, y };
-    });
     
     // Create path data
     let pathData = '';
