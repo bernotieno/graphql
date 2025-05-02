@@ -525,3 +525,376 @@
   background-color: var(--accent-color);
   transition: width var(--transition-normal);
 }
+
+/* Responsive Media Queries */
+
+/* Hamburger menu styling */
+.hamburger-menu {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--spacing-xs);
+  display: none; /* Hidden by default, shown in media queries */
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  position: relative;
+  border-radius: 50%;
+  transition: background-color var(--transition-fast);
+}
+
+.hamburger-icon {
+  position: relative;
+  width: 20px;
+  height: 2px;
+  background-color: var(--text-color);
+  transition: all var(--transition-fast);
+}
+
+.hamburger-icon:before,
+.hamburger-icon:after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: var(--text-color);
+  transition: all var(--transition-fast);
+}
+
+.hamburger-icon:before {
+  transform: translateY(-6px);
+}
+
+.hamburger-icon:after {
+  transform: translateY(6px);
+}
+
+/* Hamburger animation when active */
+.hamburger-menu.active .hamburger-icon {
+  background-color: transparent;
+}
+
+.hamburger-menu.active .hamburger-icon:before {
+  transform: rotate(45deg);
+}
+
+.hamburger-menu.active .hamburger-icon:after {
+  transform: rotate(-45deg);
+}
+
+.hamburger-menu:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.theme-dark .hamburger-menu:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Mobile dropdown menu */
+.mobile-dropdown {
+  display: none;
+  position: absolute;
+  top: var(--header-height);
+  left: 0;
+  width: 100%;
+  background-color: var(--bg-secondary);
+  box-shadow: 0 4px 8px var(--shadow);
+  z-index: var(--z-dropdown);
+  border-top: 1px solid var(--border-color);
+}
+
+.mobile-dropdown.active {
+  display: block;
+  animation: slideDown var(--transition-normal);
+}
+
+.mobile-dropdown ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.mobile-dropdown li {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.mobile-dropdown li:last-child {
+  border-bottom: none;
+}
+
+.mobile-dropdown .nav-link {
+  display: flex;
+  align-items: center;
+  padding: var(--spacing-md);
+  color: var(--text-color);
+  text-decoration: none;
+  transition: background-color var(--transition-fast);
+}
+
+.mobile-dropdown .nav-link.active {
+  background-color: var(--accent-color);
+  color: white;
+}
+
+.mobile-dropdown .nav-link:hover:not(.active) {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.theme-dark .mobile-dropdown .nav-link:hover:not(.active) {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Small screens (mobile) */
+@media screen and (max-width: 576px) {
+  :root {
+    --spacing-md: 0.75rem;
+    --spacing-lg: 1rem;
+    --spacing-xl: 1.5rem;
+    --header-height: 56px;
+  }
+  
+  .top-nav {
+    height: var(--header-height);
+    padding: var(--spacing-sm);
+  }
+  
+  /* Hide regular app logo and show hamburger icon */
+  #app-logo {
+    display: none;
+  }
+  
+  .hamburger-menu {
+    display: flex;
+  }
+  
+  /* Hide sidebar on mobile */
+  .sidebar {
+    display: none;
+  }
+  
+  .sidebar-toggle {
+    display: none;
+  }
+  
+  .content-wrapper {
+    flex-direction: column;
+    min-height: calc(100vh - var(--header-height));
+  }
+  
+  .main-content {
+    padding: var(--spacing-md);
+    width: 100%;
+  }
+  
+  /* Top nav adjustments */
+  .top-nav h1 {
+    font-size: 1.2rem;
+  }
+  
+  .nav-right {
+    gap: var(--spacing-sm);
+  }
+  
+  #logout-button {
+    font-size: 0.8rem;
+    padding: var(--spacing-xs) var(--spacing-sm);
+  }
+  
+  /* Grid adjustments */
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .statistics-grid {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+  
+  .chart-container.large {
+    grid-column: span 1;
+  }
+  
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  /* Card adjustments */
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+  }
+  
+  .profile-display-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  /* Login screen adjustments */
+  .login-card {
+    padding: var(--spacing-lg);
+  }
+}
+
+/* Medium screens (tablets) */
+@media screen and (min-width: 577px) and (max-width: 992px) {
+  /* Also use hamburger menu on tablets */
+  #app-logo {
+    display: none;
+  }
+  
+  .hamburger-menu {
+    display: flex;
+  }
+  
+  /* Hide sidebar on tablets */
+  .sidebar {
+    display: none;
+  }
+  
+  /* Mobile dropdown adjustments for tablets */
+  .mobile-dropdown {
+    width: 320px;
+    box-shadow: 2px 2px 6px var(--shadow);
+  }
+  
+  .dashboard-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+  
+  .statistics-grid {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+  
+  .chart-container.large {
+    grid-column: span 1;
+  }
+  
+  .main-content {
+    padding: var(--spacing-md);
+  }
+  
+  .profile-display-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Large screens (desktops) */
+@media screen and (min-width: 993px) and (max-width: 1200px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(auto-fill, minmax(275px, 1fr));
+  }
+  
+  .statistics-grid {
+    grid-template-columns: repeat(2, 1fr);
+    height: auto;
+  }
+  
+  .hamburger-menu {
+    display: none;
+  }
+  
+  .mobile-dropdown {
+    display: none;
+  }
+}
+
+/* Extra large screens */
+@media screen and (min-width: 1201px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+  
+  .statistics-grid {
+    grid-template-columns: repeat(auto-fill, minmax(600px, 1fr));
+  }
+  
+  .hamburger-menu {
+    display: none;
+  }
+  
+  .mobile-dropdown {
+    display: none;
+  }
+}
+
+/* Fix for images and SVGs to be responsive */
+img, svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Flexbox fallback for grid in older browsers */
+@supports not (display: grid) {
+  .dashboard-grid, .statistics-grid, .form-grid, .profile-display-grid {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .dashboard-grid > *, .statistics-grid > *, .form-grid > *, .profile-display-grid > * {
+    flex: 1 1 300px;
+    margin: var(--spacing-md);
+  }
+}
+
+/* Font size adjustments for readability on small screens */
+@media screen and (max-width: 576px) {
+  body {
+    font-size: 14px;
+  }
+  
+  h1 {
+    font-size: 1.5rem;
+  }
+  
+  h2 {
+    font-size: 1.25rem;
+  }
+  
+  h3 {
+    font-size: 1.1rem;
+  }
+  
+  .card-content {
+    padding: var(--spacing-sm);
+  }
+}
+
+/* Print media query for better printing */
+@media print {
+  .sidebar, .top-nav, .sidebar-toggle, .btn-primary, .btn-secondary, .btn-icon, .icon-button, .hamburger-menu, .mobile-dropdown {
+    display: none !important;
+  }
+  
+  .main-content {
+    padding: 0;
+    width: 100%;
+  }
+  
+  .content-wrapper {
+    display: block;
+  }
+  
+  body {
+    background-color: white;
+    color: black;
+  }
+  
+  .card {
+    box-shadow: none;
+    border: 1px solid #ddd;
+    break-inside: avoid;
+  }
+}
