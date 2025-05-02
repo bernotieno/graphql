@@ -218,16 +218,38 @@ const Profile = (function() {
     const skillsChart = document.getElementById('skills-chart');
     if (!skillsChart) return;
     
-    // Transform data for chart
-    const chartData = skills.slice(0, 5).map(skill => {
-      return {
-        name: formatSkillName(skill.type),
-        value: skill.amount
-      };
-    });
+    if (!skills || skills.length === 0) {
+      skillsChart.innerHTML = '<p>No skills data available.</p>';
+      return;
+    }
+  
+    // Find the maximum amount for each skill type
+    const skillTypeMaxes = {};
+    for (const skill of skills) {
+      if (!skillTypeMaxes[skill.type] || skill.amount > skillTypeMaxes[skill.type]) {
+        skillTypeMaxes[skill.type] = skill.amount;
+      }
+    }
     
+    // Convert to array of objects with type and amount
+    const topSkillsByType = Object.entries(skillTypeMaxes).map(([type, amount]) => ({
+      type,
+      amount
+    }));
+    
+    // Sort by amount (descending) and take top 5
+    const top5Skills = topSkillsByType
+      .sort((a, b) => b.amount - a.amount)
+      .slice(0, 5);
+    
+    // Prepare chart data
+    const chartData = top5Skills.map(skill => ({
+      name: formatSkillName(skill.type),
+      value: skill.amount
+    }));
+  
     // Create chart
-    Charts.createPieChart('skills-chart', chartData, {
+    Charts.createBarChart('skills-chart', chartData, {
       barColor: (d, i) => APP_CONFIG.CHART_COLORS[i % APP_CONFIG.CHART_COLORS.length]
     });
   }
@@ -364,19 +386,38 @@ const Profile = (function() {
   function updateAuditRatioChart(data) {
     const chartEl = document.getElementById('audit-ratio-chart');
     if (!chartEl) return;
-    
-    const auditRatio = data.auditRatio || 0;
-    
-    // Create chart data
+  
+    const transactions = data.transaction || [];
+  
+    // Initialize totals
+    let upTotal = 0;
+    let downTotal = 0;
+  
+    // Sum amounts by type
+    transactions.forEach(t => {
+      const amount = Number(t.amount) || 0;
+      if (t.type === 'up') {
+        upTotal += amount;
+      } else if (t.type === 'down') {
+        downTotal += amount;
+      }
+    });
+  
+    // Prepare chart data
     const chartData = [
-      { name: 'Done', value: auditRatio },
-      { name: 'Needed', value: Math.max(1 - auditRatio, 0) }
+      { name: 'Audits Done', value: upTotal },
+      { name: 'Audits Received', value: downTotal }
     ];
-    
-    // Create chart
+  
+    // Handle empty data
+    if (upTotal === 0 && downTotal === 0) {
+      chartEl.innerHTML = '<p>No audits data available.</p>';
+      return;
+    }
+  
+    // Create bar chart
     Charts.createPieChart('audit-ratio-chart', chartData, {
-      donut: true,
-      colors: [APP_CONFIG.CHART_COLORS[3], APP_CONFIG.CHART_COLORS[2]]
+      barColor: (d) => d.name === 'Audits Done' ? '#4caf50' : '#f44336' // green for done, red for received
     });
   }
   
@@ -386,60 +427,81 @@ const Profile = (function() {
    */
   function updateSkillProgressChart(skills) {
     const chartEl = document.getElementById('skill-progress-chart');
-    if (!chartEl) return;
+    if (chartEl) return;
     
     if (!skills || skills.length === 0) {
       chartEl.innerHTML = '<p>No skills data available.</p>';
       return;
     }
+  
+    // Find the maximum amount for each skill type
+    const skillTypeMaxes = {};
+    for (const skill of skills) {
+      if (!skillTypeMaxes[skill.type] || skill.amount > skillTypeMaxes[skill.type]) {
+        skillTypeMaxes[skill.type] = skill.amount;
+      }
+    }
+    console.log("this is skillTypeMaxes",skillTypeMaxes)
     
-    // Transform data for chart
-    const chartData = skills.slice(0, 8).map(skill => {
-      return {
-        name: formatSkillName(skill.type),
-        value: skill.amount
-      };
-    });
+    // Convert to array of objects with type and amount
+    const topSkillsByType = Object.entries(skillTypeMaxes).map(([type, amount]) => ({
+      type,
+      amount
+    }));
+    console.log("this is topSkillsByType",topSkillsByType)
     
+    // Sort by amount (descending) and take top 5
+    const top5Skills = topSkillsByType
+      .sort((a, b) => b.amount - a.amount)
+      .slice(0, 5);
+    
+      console.log("this is top5Skills",top5Skills)
+    // Prepare chart data
+    const chartData = top5Skills.map(skill => ({
+      name: formatSkillName(skill.type),
+      value: skill.amount
+    }));
+  console.log("this is chartData",chartData)
     // Create chart
     Charts.createBarChart('skill-progress-chart', chartData, {
       barColor: (d, i) => APP_CONFIG.CHART_COLORS[i % APP_CONFIG.CHART_COLORS.length]
     });
   }
   
+  
   /**
    * Update events chart
    * @param {Object} data - User data with events
    */
   function updateEventsChart(data) {
-    const chartEl = document.getElementById('events-chart');
-    if (!chartEl) return;
-    
+    const chartEl = document.getElementById('skill-progress-chart');
+    if (chartEl) return;
+
     const transactions = data.transaction || [];
-    const eventTypes = {};
-    
-    // Count transaction types
-    transactions.forEach(t => {
-      const type = t.type || 'unknown';
-      eventTypes[type] = (eventTypes[type] || 0) + 1;
-    });
-    
-    // Convert to chart data
-    const chartData = Object.keys(eventTypes).map(type => {
+  
+    // Filter for 'xp' type transactions
+    const xpEvents = transactions.filter(tx => tx.type === 'xp');
+  
+    // Take the first 10 XP transactions
+    const chartData = xpEvents.slice(0, 10).map(tx => {
       return {
-        name: formatTransactionType(type),
-        value: eventTypes[type]
+        x: formatDate(tx.createdAt, true), // Format the timestamp
+        y: (tx.amount / 10000 ) || 0 // Use amount as Y-axis
       };
-    }).sort((a, b) => b.value - a.value).slice(0, 5);
-    
-    if (chartData.length === 0) {
-      chartEl.innerHTML = '<p>No events data available.</p>';
-      return;
-    }
-    
-    // Create chart
-    Charts.createPieChart('events-chart', chartData);
+    });
+
+    console.log("this is chartData",chartData)
+  
+    // Call the line chart renderer
+    Charts.createLineChart('events-chart', chartData, {
+      showArea: true,
+      lineColor: APP_CONFIG.CHART_COLORS[1],
+      pointColor: APP_CONFIG.CHART_COLORS[1]
+    });
   }
+  
+
+  
   
   /**
    * Update performance chart
