@@ -37,6 +37,10 @@
       <!-- Top Navigation -->
       <header class="top-nav">
         <div class="nav-left">
+          <!-- Hamburger Menu Button (Hidden on desktop, shown on mobile) -->
+          <button class="hamburger-menu" aria-label="Toggle navigation menu">
+            <span class="hamburger-icon"></span>
+          </button>
           <div id="app-logo"></div>
           <h1>Profile Dashboard</h1>
         </div>
@@ -49,6 +53,15 @@
           <button id="logout-button" class="btn-secondary">Logout</button>
         </div>
       </header>
+
+      <!-- Mobile Dropdown Menu (Hidden by default) -->
+      <div class="mobile-dropdown">
+        <ul>
+          <li><a href="#dashboard" class="nav-link active" data-section="dashboard">Dashboard</a></li>
+          <li><a href="#profile" class="nav-link" data-section="profile">Profile</a></li>
+          <li><a href="#statistics" class="nav-link" data-section="statistics">Statistics</a></li>
+        </ul>
+      </div>
 
       <div class="content-wrapper">
         <!-- Sidebar Navigation -->
@@ -179,6 +192,7 @@
   <script src="js/components/sidebar.js"></script>
   <script src="js/visualizations/charts.js"></script>
   <script src="js/components/profile.js"></script>
+  <script src="js/hamburger.js"></script> <!-- New script for hamburger menu functionality -->
   <script src="js/main.js"></script>
 </body>
 </html>
