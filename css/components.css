@@ -161,6 +161,30 @@
   transition: box-shadow var(--transition-fast), background-color var(--transition-normal);
 }
 
+.card.special-card:nth-of-type(1) {
+  height: 200px;
+}
+
+.card.special-card:nth-of-type(1) svg {
+  margin-top: -100px;
+}
+
+.card.special-card:nth-of-type(2) {
+  height: 450px;
+}
+
+.card.special-card:nth-of-type(2) svg {
+  margin-bottom: -200px;
+}
+
+.card.special-card:nth-of-type(3) {
+  height: 450px;
+}
+
+/* .card:nth-of-type(3) svg {
+  margin-bottom: -200px;
+} */
+
 .card:hover {
   box-shadow: 0 4px 6px var(--shadow);
 }
@@ -218,6 +242,10 @@
   height: 400px;
   grid-column: span 2;
 }
+
+/* #events-chart {
+  height: 800px;
+} */
 
 /* Button Styles */
 .btn-primary, .btn-secondary, .btn-icon {
