@@ -34,6 +34,4 @@ const APP_CONFIG = {
     "var(--chart-color-5)",
   ],
   
-  // Default avatar placeholder text
-  DEFAULT_AVATAR: "👤",
 };
