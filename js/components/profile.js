@@ -375,7 +375,28 @@ displayGrid.appendChild(displayNameItem);
     const xpInfo = document.createElement('p');
     xpInfo.innerHTML = `<strong>XP:</strong> ${displayValue} ${unit}`;
     content.appendChild(xpInfo);
-    
+
+    //grade
+    const gradeInfo = document.createElement('p');
+    let totalGrade = 0;
+
+    if (data.progress && data.progress.length > 0) {
+      data.progress.forEach(entry => {
+        if (entry.grade !== null && entry.grade !== undefined) {
+          const gradeValue = typeof entry.grade === 'string' ? parseFloat(entry.grade) : entry.grade;
+          
+          if (!isNaN(gradeValue)) {
+            totalGrade += gradeValue;
+          }
+        }
+      });
+  
+      gradeInfo.innerHTML = `<strong>Grade:</strong> ${totalGrade.toFixed(2)}%`;
+    } else {
+      gradeInfo.innerHTML = `<strong>Grade:</strong> N/A (No grades available)`;
+    }
+
+    content.appendChild(gradeInfo);
 
     overviewEl.appendChild(content);
   }
@@ -583,40 +604,6 @@ displayGrid.appendChild(displayNameItem);
     });
   }
   
-
-  
-  
-  /**
-   * Update performance chart
-   * @param {Object} data - User data with progress information
-   */
-  function updatePerformanceChart(data) {
-    const chartEl = document.getElementById('performance-chart');
-    if (!chartEl) return;
-    
-    const progress = data.progress || [];
-    
-    if (progress.length === 0) {
-      chartEl.innerHTML = '<p>No performance data available.</p>';
-      return;
-    }
-    
-    // Get average grade
-    const grades = progress.filter(p => p.grade !== null && p.grade !== undefined).map(p => p.grade);
-    const avgGrade = grades.reduce((sum, grade) => sum + grade, 0) / (grades.length || 1);
-    
-    // Create chart data
-    const chartData = [
-      { name: 'Average Grade', value: avgGrade.toFixed(1) },
-      { name: 'Maximum', value: (Math.max(...grades) || 0).toFixed(1) }
-    ];
-    
-    // Create chart
-    Charts.createBarChart('performance-chart', chartData, {
-      barColor: APP_CONFIG.CHART_COLORS[1]
-    });
-  }
-  
   /**
    * Update all visualization charts
    * @param {Object} data - User data from GraphQL
@@ -649,8 +636,6 @@ displayGrid.appendChild(displayNameItem);
     // Update events chart
     updateEventsChart(data);
     
-    // Update performance chart
-    updatePerformanceChart(data);
   }
   
   /**
