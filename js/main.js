@@ -140,7 +140,7 @@
       
       if (basicInfoResult.success && basicInfoResult.data && basicInfoResult.data.user) {
         // Update user avatar with basic info
-        Navigation.setupUserAvatar(basicInfoResult.data.user);
+        Navigation.setupUserAvatar(basicInfoResult.data.user[0]);
       }
       
       // Then get full profile data
