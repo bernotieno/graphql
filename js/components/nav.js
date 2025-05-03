@@ -102,9 +102,8 @@ const Navigation = (function() {
         // Get first letter of login/username
         const initial = userData.login.charAt(0).toUpperCase();
         userAvatar.textContent = initial;
-      } else {
-        userAvatar.textContent = APP_CONFIG.DEFAULT_AVATAR;
-      }
+        return
+      } 
     }
   }
   
