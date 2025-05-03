@@ -154,20 +154,32 @@ const Profile = (function() {
     displayGrid.appendChild(userIdItem);
     
     // Display Name
-    const displayName = data[0].attrs && data[0].attrs.firstName ? data[0].attrs.lastName : '-';
-    const displayNameItem = createProfileItem('Display Name', displayName);
-    displayGrid.appendChild(displayNameItem);
+    const displayName = data[0].attrs && data[0].attrs.firstName ? 
+                    `${data[0].attrs.firstName} ${data[0].attrs.lastName}` : '-';
+const displayNameItem = createProfileItem('Display Name', displayName);
+displayGrid.appendChild(displayNameItem);
     
     // Email
     const email = data[0].attrs && data[0].attrs.email ? data[0].attrs.email : '-';
     const emailItem = createProfileItem('Email', email);
     displayGrid.appendChild(emailItem);
     
-    // Audit Ratio
-    const auditRatio = data[0].auditRatio !== undefined ? data[0].auditRatio.toFixed(1) : '-';
-    const auditRatioItem = createProfileItem('Audit Ratio', auditRatio);
-    displayGrid.appendChild(auditRatioItem);
+    //country
+    const country = data[0].attrs && data[0].attrs.country ? data[0].attrs.country : '-';
+    const countryItem = createProfileItem('Country', country);
+    displayGrid.appendChild(countryItem);
+
+    //phone
+    const phone = data[0].attrs && data[0].attrs.phone ? data[0].attrs.phone : '-';
+    const phoneItem = createProfileItem('Phone', phone);
+    displayGrid.appendChild(phoneItem);
+
+    //gender
     
+    const gender = data[0].attrs && data[0].attrs.gender ? data[0].attrs.gender : '-';
+    const genderItem = createProfileItem('Gender', gender);
+    displayGrid.appendChild(genderItem);
+
     // Bio
     const bio = document.createElement('div');
     bio.className = 'profile-item';
@@ -320,7 +332,7 @@ const Profile = (function() {
     
     // Login info
     const loginInfo = document.createElement('p');
-    loginInfo.innerHTML = `<strong>Login:</strong> ${data.user[0].login}`;
+    loginInfo.innerHTML = `<strong>Username:</strong> ${data.user[0].login}`;
     content.appendChild(loginInfo);
     
     // Audit ratio
@@ -340,6 +352,12 @@ const Profile = (function() {
     const skillsInfo = document.createElement('p');
     skillsInfo.innerHTML = `<strong>Skills:</strong> ${uniqueSkillTypes.size}`;
     content.appendChild(skillsInfo);
+
+    // XP
+    const xp = data.user[0].xp || 0;
+    const xpInfo = document.createElement('p');
+    xpInfo.innerHTML = `<strong>XP:</strong> ${xp}`;
+    content.appendChild(xpInfo);
 
     
     overviewEl.appendChild(content);
