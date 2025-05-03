@@ -320,7 +320,6 @@ displayGrid.appendChild(displayNameItem);
    * @param {Object} data - User data
    */
   function updateUserOverview(data) {
-    console.log("this data:",data)
     const overviewEl = document.getElementById('user-overview');
     if (!overviewEl) return;
     
@@ -354,14 +353,107 @@ displayGrid.appendChild(displayNameItem);
     content.appendChild(skillsInfo);
 
     // XP
-    const xp = data.user[0].xp || 0;
-    const xpInfo = document.createElement('p');
-    xpInfo.innerHTML = `<strong>XP:</strong> ${xp}`;
-    content.appendChild(xpInfo);
-
+    const xpTransactions = data.transaction.filter(tx => tx.type === "xp");
+    const totalXPBytes = xpTransactions.reduce((sum, tx) => sum + tx.amount, 0);
     
+    let displayValue, unit;
+    
+    if (totalXPBytes >= 1_000_000) {
+      // Convert to MB
+      displayValue = (totalXPBytes / 1_000_000).toFixed(2);
+      unit = "MB";
+    } else if (totalXPBytes >= 1_000) {
+      // Convert to KB
+      displayValue = (totalXPBytes / 1_000).toFixed(2);
+      unit = "KB";
+    } else {
+      // Show in Bytes
+      displayValue = totalXPBytes.toFixed(2);
+      unit = "Bytes";
+    }
+    
+    const xpInfo = document.createElement('p');
+    xpInfo.innerHTML = `<strong>XP:</strong> ${displayValue} ${unit}`;
+    content.appendChild(xpInfo);
+    
+
     overviewEl.appendChild(content);
   }
+
+  function updateAuditOverview(data) {
+    const auditEl = document.getElementById('audit-overview');
+    if (!auditEl) return;
+  
+    // Clear loading or existing content
+    auditEl.innerHTML = '';
+  
+    const user = data.user[0];
+    const audits = user.audits || [];
+  
+    if (audits.length === 0) {
+      auditEl.innerHTML = '<p class="loading-text">No active audits found.</p>';
+      return;
+    }
+  
+    audits.forEach((audit, index) => {
+      const card = document.createElement('div');
+      // card.classList.add('card');
+  
+      const title = document.createElement('h3');
+      title.textContent = `Audit #${index + 1}`;
+      card.appendChild(title);
+  
+      const cardContent = document.createElement('div');
+      // cardContent.classList.add('card-content');
+  
+      // Closed At
+      const closedAt = document.createElement('p');
+      closedAt.innerHTML = `<strong>Closed At:</strong> ${audit.closedAt || 'Still open'}`;
+      cardContent.appendChild(closedAt);
+  
+      // Group Info
+      const group = audit.group;
+      if (group) {
+        const captainInfo = document.createElement('p');
+        captainInfo.innerHTML = `<strong>Captain:</strong> ${group.captainLogin} (ID: ${group.captainId}) - Access: ${group.captain?.canAccessPlatform}`;
+        cardContent.appendChild(captainInfo);
+  
+        const pathInfo = document.createElement('p');
+        pathInfo.innerHTML = `<strong>Group Path:</strong> ${group.path}`;
+        cardContent.appendChild(pathInfo);
+  
+        const createdAt = document.createElement('p');
+        createdAt.innerHTML = `<strong>Created At:</strong> ${group.createdAt}`;
+        cardContent.appendChild(createdAt);
+  
+        const updatedAt = document.createElement('p');
+        updatedAt.innerHTML = `<strong>Updated At:</strong> ${group.updatedAt}`;
+        cardContent.appendChild(updatedAt);
+  
+        const membersTitle = document.createElement('p');
+        membersTitle.innerHTML = `<strong>Members:</strong>`;
+        cardContent.appendChild(membersTitle);
+  
+        const memberList = document.createElement('ul');
+        group.members.forEach(member => {
+          const li = document.createElement('li');
+          li.textContent = `${member.userLogin} (ID: ${member.userId})`;
+          memberList.appendChild(li);
+        });
+        cardContent.appendChild(memberList);
+      }
+  
+      // Private Code
+      const privateCode = document.createElement('p');
+      privateCode.innerHTML = `<strong>Private Code:</strong> ${audit.private?.code || 'N/A'}`;
+      cardContent.appendChild(privateCode);
+  
+      // Append content to card
+      card.appendChild(cardContent);
+      // auditEl.appendChild(card);
+    });
+  }
+  
   
   /**
    * Update the progress timeline chart
