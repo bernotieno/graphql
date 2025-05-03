@@ -383,75 +383,48 @@ displayGrid.appendChild(displayNameItem);
   function updateAuditOverview(data) {
     const auditEl = document.getElementById('audit-overview');
     if (!auditEl) return;
-  
-    // Clear loading or existing content
+    // Clear loading text
     auditEl.innerHTML = '';
-  
-    const user = data.user[0];
-    const audits = user.audits || [];
-  
+    // Create overview content
+    const content = document.createElement('div');
+    
+    const audits = data.user[0]?.audits || [];
     if (audits.length === 0) {
-      auditEl.innerHTML = '<p class="loading-text">No active audits found.</p>';
+      auditEl.innerHTML = '<p>No active audits found.</p>';
       return;
     }
-  
-    audits.forEach((audit, index) => {
-      const card = document.createElement('div');
-      // card.classList.add('card');
-  
-      const title = document.createElement('h3');
-      title.textContent = `Audit #${index + 1}`;
-      card.appendChild(title);
-  
-      const cardContent = document.createElement('div');
-      // cardContent.classList.add('card-content');
-  
-      // Closed At
-      const closedAt = document.createElement('p');
-      closedAt.innerHTML = `<strong>Closed At:</strong> ${audit.closedAt || 'Still open'}`;
-      cardContent.appendChild(closedAt);
-  
-      // Group Info
-      const group = audit.group;
-      if (group) {
-        const captainInfo = document.createElement('p');
-        captainInfo.innerHTML = `<strong>Captain:</strong> ${group.captainLogin} (ID: ${group.captainId}) - Access: ${group.captain?.canAccessPlatform}`;
-        cardContent.appendChild(captainInfo);
-  
-        const pathInfo = document.createElement('p');
-        pathInfo.innerHTML = `<strong>Group Path:</strong> ${group.path}`;
-        cardContent.appendChild(pathInfo);
-  
-        const createdAt = document.createElement('p');
-        createdAt.innerHTML = `<strong>Created At:</strong> ${group.createdAt}`;
-        cardContent.appendChild(createdAt);
-  
-        const updatedAt = document.createElement('p');
-        updatedAt.innerHTML = `<strong>Updated At:</strong> ${group.updatedAt}`;
-        cardContent.appendChild(updatedAt);
-  
-        const membersTitle = document.createElement('p');
-        membersTitle.innerHTML = `<strong>Members:</strong>`;
-        cardContent.appendChild(membersTitle);
-  
-        const memberList = document.createElement('ul');
-        group.members.forEach(member => {
-          const li = document.createElement('li');
-          li.textContent = `${member.userLogin} (ID: ${member.userId})`;
-          memberList.appendChild(li);
-        });
-        cardContent.appendChild(memberList);
-      }
-  
-      // Private Code
-      const privateCode = document.createElement('p');
-      privateCode.innerHTML = `<strong>Private Code:</strong> ${audit.private?.code || 'N/A'}`;
-      cardContent.appendChild(privateCode);
-  
-      // Append content to card
-      card.appendChild(cardContent);
-      // auditEl.appendChild(card);
-    });
+    
+    // Audit count
+    const auditCount = document.createElement('p');
+    auditCount.innerHTML = `<strong>Active Audits:</strong> ${audits.length}`;
+    content.appendChild(auditCount);
+    
+    // Latest audit info
+    const latestAudit = audits[0];
+    
+    // Closed At
+    const closedAt = document.createElement('p');
+    closedAt.innerHTML = `<strong>Status:</strong> ${latestAudit.closedAt ? 'Closed' : 'Open'}`;
+    content.appendChild(closedAt);
+    
+    // Group Info if exists
+    if (latestAudit.group) {
+      const groupInfo = document.createElement('p');
+      groupInfo.innerHTML = `<strong>Group Captain:</strong> ${latestAudit.group.captainLogin}`;
+      content.appendChild(groupInfo);
+      
+      const membersCount = document.createElement('p');
+      membersCount.innerHTML = `<strong>Group Members:</strong> ${latestAudit.group.members.length}`;
+      content.appendChild(membersCount);
+    }
+    
+    // Private Code
+    const privateCode = document.createElement('p');
+    privateCode.innerHTML = `<strong>Private Code:</strong> ${latestAudit.private?.code || 'N/A'}`;
+    content.appendChild(privateCode);
+    
+    // Append content to audit element
+    auditEl.appendChild(content);
   }
   
   
@@ -665,6 +638,8 @@ displayGrid.appendChild(displayNameItem);
     // Update user overview
     updateUserOverview(data);
     
+    updateAuditOverview(data);
+
     // Update progress timeline
     updateProgressTimeline(data);
     
