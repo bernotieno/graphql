@@ -583,14 +583,6 @@
   transform: rotate(-45deg);
 }
 
-.hamburger-menu:hover {
-  background-color: rgba(0, 0, 0, 0.05);
-}
-
-.theme-dark .hamburger-menu:hover {
-  background-color: rgba(255, 255, 255, 0.05);
-}
-
 /* Mobile dropdown menu */
 .mobile-dropdown {
   display: none;
