@@ -180,6 +180,12 @@ displayGrid.appendChild(displayNameItem);
     const genderItem = createProfileItem('Gender', gender);
     displayGrid.appendChild(genderItem);
 
+    //id
+    const id = data[0].attrs && data[0].attrs["ID.NUMBER"] ? data[0].attrs["ID.NUMBER"] : '-';
+    const idItem = createProfileItem('ID Number', id);
+    displayGrid.appendChild(idItem);
+    
+
     // Bio
     const bio = document.createElement('div');
     bio.className = 'profile-item';
