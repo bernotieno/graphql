@@ -6,8 +6,8 @@
   --light-text: #1f2937;
   --light-text-secondary: #4b5563;
   --light-border: #e5e7eb;
-  --light-accent: #ec4899;
-  --light-accent-hover: #db2777;
+  --light-accent: #4338d4;
+  --light-accent-hover: #1b138a;
   --light-success: #10b981;
   --light-warning: #f59e0b;
   --light-error: #ef4444;
@@ -19,8 +19,8 @@
   --dark-text: #f9fafb;
   --dark-text-secondary: #d1d5db;
   --dark-border: #374151;
-  --dark-accent: #f472b6;
-  --dark-accent-hover: #ec4899;
+  --dark-accent: #4338d4;
+  --dark-accent-hover: #1b138a;
   --dark-success: #34d399;
   --dark-warning: #fbbf24;
   --dark-error: #f87171;
