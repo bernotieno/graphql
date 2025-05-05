@@ -433,6 +433,14 @@ displayGrid.appendChild(displayNameItem);
     const closedAt = document.createElement('p');
     closedAt.innerHTML = `<strong>Status:</strong> ${latestAudit.closedAt ? 'Closed' : 'Open'}`;
     content.appendChild(closedAt);
+
+    //path
+    const path = document.createElement('p');
+    const fullPath = latestAudit.group.path;
+    const lastSegment = fullPath.split('/').filter(Boolean).pop(); // gets last non-empty part
+    path.innerHTML = `<strong>Project:</strong> ${lastSegment}`;
+    content.appendChild(path);
+
     
     // Group Info if exists
     if (latestAudit.group) {
